@@ -55,13 +55,17 @@ namespace GameStateManagement
             // Create the screen manager component.
             screenManager = new ScreenManager(this);
 
-            Components.Add(screenManager);
-
             // Activate the first screens.
             screenManager.AddScreen(new BackgroundScreen(), null);
             screenManager.AddScreen(new MainMenuScreen(), null);
         }
 
+        protected override void Initialize()
+        {
+            screenManager.Initialize();
+
+            base.Initialize();
+        }
 
         /// <summary>
         /// Loads graphics content.
@@ -72,13 +76,20 @@ namespace GameStateManagement
             {
                 Content.Load<object>(asset);
             }
+
+            screenManager.LoadContent();
         }
 
 
         #endregion
 
-        #region Draw
+        #region Update and Draw
 
+        protected override void Update(GameTime gameTime)
+        {
+            screenManager.Update(gameTime);
+            base.Update(gameTime);
+        }
 
         /// <summary>
         /// This is called when the game should draw itself.
@@ -86,6 +97,8 @@ namespace GameStateManagement
         protected override void Draw(GameTime gameTime)
         {
             graphics.GraphicsDevice.Clear(Color.Black);
+
+            screenManager.Draw(gameTime);
 
             // The real drawing happens inside the screen manager component.
             base.Draw(gameTime);
